@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Comment from "../components/Comment";
 
 export default function Post() {
   const [post, setPost] = useState([]);
@@ -81,13 +82,12 @@ export default function Post() {
           ? "Hide Comments"
           : "Show Comments"}
       </button>
+
       {showComments && (
         <ul>
           {comments &&
             comments.map((comment) => (
-              <li key={comment.id} className="mb-2">
-                <strong>{comment.author?.username}:</strong> {comment.content}
-              </li>
+              <Comment key={comment.id} comment={comment} />
             ))}
         </ul>
       )}
