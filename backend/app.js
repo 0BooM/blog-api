@@ -1,8 +1,9 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import passport from "./passport.js";
+import session from "express-session";
+
 const app = express();
-const cors = require("cors");
-const passport = require("./passport");
-const session = require("express-session");
 
 const PORT = 3000;
 app.use(cors());
@@ -16,11 +17,11 @@ app.use(
 );
 app.use(passport.session());
 //Index router
-const PostsRouter = require("./routes/postsRouter");
+import PostsRouter from "./routes/postsRouter.js";
 app.use("/posts", PostsRouter);
 
 //Auth router
-const AuthRouter = require("./routes/authRouter");
+import AuthRouter from "./routes/authRouter.js";
 app.use("/auth", AuthRouter);
 
 app.use((req, res) => {

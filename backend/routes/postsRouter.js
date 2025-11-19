@@ -1,9 +1,10 @@
-const { Router } = require("express");
+import { Router } from "express";
+import { getPosts, getPostById } from "../controllers/PostsController.js";
+
 const PostsRouter = Router();
-const PostsController = require("../controllers/PostsController");
 
-PostsRouter.get("/", PostsController.getPosts);
+PostsRouter.get("/", getPosts);
 
-PostsRouter.get("/:id", PostsController.getPostById)
+PostsRouter.get("/:id", getPostById);
 
-module.exports = PostsRouter;
+export default PostsRouter;

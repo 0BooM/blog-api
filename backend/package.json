@@ -13,7 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/0BooM/blog-api/issues"
   },
@@ -25,6 +25,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   }

@@ -1,12 +1,13 @@
-const passport = require("../passport");
-const bcrypt = require("bcryptjs");
-const supabase = require("../supabaseClient");
-require("dotenv").config();
+import passport from "../passport.js";
+import bcrypt from "bcryptjs";
+import supabase from "../supabaseClient.js";
+import "dotenv/config";
 
-exports.signup = async (req, res) => {
+import jwt from "jsonwebtoken";
+
+export const signup = async (req, res) => {
   try {
     if (!req.isAuthenticated()) {
-
       if (!req.body.password || req.body.password.length < 6) {
         return res.status(400).json({
           error: "Password should be at least 6 characters.",
@@ -15,7 +16,7 @@ exports.signup = async (req, res) => {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
       const username = req.body.username;
-      if(!username){
+      if (!username) {
         return res.status(400).json({
           error: "Pass in correct username",
         });
@@ -33,7 +34,7 @@ exports.signup = async (req, res) => {
             .status(400)
             .json({ error: "User with this username already exists" });
         }
-        
+
         console.error(error);
         return res.status(400).json({ error: error.message });
       }
@@ -44,5 +45,26 @@ exports.signup = async (req, res) => {
     }
   } catch (error) {
     return res.sendStatus(400);
+  }
+};
+
+export const login = (req, res, next) => {
+  try {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) return next(err);
+      if (!user) {
+        return res.status(400).json({ error: info.message || "Login failed" });
+      }
+      // Generate JWT
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "2h" }
+      );
+
+      return res.status(200).json({ message: "Login successful", token, user });
+    })(req, res, next);
+  } catch (err) {
+    res.status(500).json("Couldn't log you in");
   }
 };

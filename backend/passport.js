@@ -1,49 +1,49 @@
-const passport = require("passport");
-const localStrategy = require("passport-local");
-const bcrypt = require("bcryptjs");
-const supabase = require("./supabaseClient");
+import passport from "passport";
+import localStrategy from "passport-local";
+import bcrypt from "bcryptjs";
+import supabase from "./supabaseClient.js";
 
 passport.use(
-    new localStrategy(async (username, password, done) => {
-        try {
-            const { data: user, error } = await supabase
-                .from("User")
-                .select("*")
-                .eq("username", username)
-                .single();
+  new localStrategy(async (username, password, done) => {
+    try {
+      const { data: user, error } = await supabase
+        .from("User")
+        .select("*")
+        .eq("username", username)
+        .single();
 
-            if(!user) {
-                return done(null, false, {message: "Incorrect username"})
-            }
+      if (!user) {
+        return done(null, false, { message: "Incorrect username" });
+      }
 
-            const match = await bcrypt.compare(password, user.password)
-            if(!match){
-                return done(null, false, { message: "Incorrect password" });
-            }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return done(null, false, { message: "Incorrect password" });
+      }
 
-            return done(null, user);
-        } catch (error) {
-            return done(error);
-        }
-    })
-)
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  })
+);
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
-})
+  done(null, user.id);
+});
 
 passport.deserializeUser(async (id, done) => {
-    try {
-        const {data: user, error} = await supabase
-            .from("User")
-            .select("*")
-            .eq("id", id)
-            .single();
+  try {
+    const { data: user, error } = await supabase
+      .from("User")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-        done(null, user || false);
-    } catch (error) {
-        done(error);
-    }
-})
+    done(null, user || false);
+  } catch (error) {
+    done(error);
+  }
+});
 
-module.exports = passport;
+export default passport;
