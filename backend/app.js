@@ -16,7 +16,7 @@ app.use(
   })
 );
 app.use(passport.session());
-//Index router
+//Posts router
 import PostsRouter from "./routes/postsRouter.js";
 app.use("/posts", PostsRouter);
 

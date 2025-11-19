@@ -35,3 +35,23 @@ export const getPostById = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const getPostComments = async (req, res) => {
+  const postId = req.params.id;
+  try{
+    const { data, error } = await supabase
+      .from("Comment")
+      .select("id, content, author:author_id(username), post_id, created_at")
+      .eq("post_id", postId)
+      .order("created_at", {ascending: false});
+
+    if(error){
+      console.error(error);
+      res.sendStatus(500);
+    }
+    res.json(data);
+  } catch(error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}

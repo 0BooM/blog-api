@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { getPosts, getPostById } from "../controllers/PostsController.js";
+import * as PostsController from "../controllers/PostsController.js";
 
 const PostsRouter = Router();
 
-PostsRouter.get("/", getPosts);
+PostsRouter.get("/", PostsController.getPosts);
 
-PostsRouter.get("/:id", getPostById);
+PostsRouter.get("/:id", PostsController.getPostById);
+
+PostsRouter.get("/:id/comments", PostsController.getPostComments);
 
 export default PostsRouter;
