@@ -4,25 +4,25 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     setError(null);
     e.preventDefault();
-    // const response = await fetch("http://localhost:3000/auth/signup", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ username, password, email }),
-    // });
-    // const data = await response.json();
-    // console.log(data);
-    // if (response.ok) {
-    //   navigate("/");
-    // } else {
-    //   setError(data.error || "Signup failed");
-    // }
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password}),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.ok && data.token) {
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    } else {
+      setError(data.error || "Login failed");
+    }
   };
   return (
     <div className="login-form">
@@ -46,17 +46,7 @@ export default function Login() {
           className="border"
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        <label htmlFor="email">E-mail</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="border"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input type="submit" value="Sign up" className="border" />
+        <input type="submit" value="Login" className="border" />
       </form>
     </div>
   );

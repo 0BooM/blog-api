@@ -17,7 +17,7 @@ export const getPosts = async (req, res) => {
 };
 
 export const getPostById = async (req, res) => {
-  postId = req.params.id;
+  const postId = req.params.id;
   try {
     const { data, error } = await supabase
       .from("Post")
@@ -38,20 +38,20 @@ export const getPostById = async (req, res) => {
 
 export const getPostComments = async (req, res) => {
   const postId = req.params.id;
-  try{
+  try {
     const { data, error } = await supabase
       .from("Comment")
       .select("id, content, author:author_id(username), post_id, created_at")
       .eq("post_id", postId)
-      .order("created_at", {ascending: false});
+      .order("created_at", { ascending: false });
 
-    if(error){
+    if (error) {
       console.error(error);
       res.sendStatus(500);
     }
     res.json(data);
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     return res.sendStatus(500);
   }
-}
+};
