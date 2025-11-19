@@ -55,3 +55,28 @@ export const getPostComments = async (req, res) => {
     return res.sendStatus(500);
   }
 };
+
+export const postPostComments = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const author_id = req.user.id; // From JWT
+    const content = req.body.content;
+    const { data, error } = await supabase
+      .from("Comment")
+      .insert([{ content, author_id, post_id: postId }])
+      .select();
+    if (error) {
+      console.error(error);
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (!data || !data[0]) {
+      return res.status(400).json({ error: "Comment not created" });
+    }
+
+    res.status(201).json(data[0]);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};

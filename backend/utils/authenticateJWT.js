@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 
-export const authenticateJWT = (req, res, next) => {
+const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer ")) {
     const token = authHeader.substring(7);
@@ -15,3 +15,5 @@ export const authenticateJWT = (req, res, next) => {
     res.sendStatus(401);
   }
 };
+
+export default authenticateJWT;
